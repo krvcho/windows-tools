@@ -49,8 +49,6 @@ A comprehensive Windows desktop application for system administration and mainte
 - Secure process elevation
 - User-friendly privilege status indicators
 
-## Screenshots
-
 ### Main Interface
 The application features a clean, tabbed interface with dedicated sections for each tool:
 
