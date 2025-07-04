@@ -225,11 +225,17 @@ class UIStyles:
             gridline-color: #BDC3C7;
             background-color: white;
             alternate-background-color: #F8F9FA;
+            selection-background-color: #3498DB;
+            selection-color: white;
+            font-size: 12px;
+            border: 1px solid #BDC3C7;
         }
 
         QTableWidget::item {
-            padding: 5px;
+            padding: 8px 4px;
             border-bottom: 1px solid #ECF0F1;
+            color: #2C3E50;
+            min-height: 20px;
         }
 
         QTableWidget::item:selected {
@@ -237,12 +243,18 @@ class UIStyles:
             color: white;
         }
 
+        QTableWidget::item:hover {
+            background-color: #EBF3FD;
+        }
+
         QHeaderView::section {
             background-color: #34495E;
             color: white;
-            padding: 8px;
+            padding: 6px 4px;
             border: none;
             font-weight: bold;
+            font-size: 12px;
+            min-height: 25px;
         }
 
         QLineEdit {
@@ -297,5 +309,46 @@ class UIStyles:
         QProgressBar::chunk {
             background-color: #3498DB;
             border-radius: 3px;
+        }
+
+        QLabel#status-label {
+            color: #2C3E50;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 5px;
+            background-color: #ECF0F1;
+            border-radius: 4px;
+        }
+
+        QLabel#service-status-running {
+            color: #27AE60;
+            font-weight: bold;
+        }
+
+        QLabel#service-status-stopped {
+            color: #E74C3C;
+            font-weight: bold;
+        }
+
+        QLabel#service-status-pending {
+            color: #F39C12;
+            font-weight: bold;
+        }
+
+        QFrame#control-panel {
+            background-color: #F8F9FA;
+            border: 1px solid #BDC3C7;
+            border-radius: 4px;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+
+        QSplitter::handle {
+            background-color: #BDC3C7;
+            height: 3px;
+        }
+
+        QSplitter::handle:hover {
+            background-color: #3498DB;
         }
         """

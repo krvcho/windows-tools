@@ -2,7 +2,7 @@
 
 A comprehensive Windows desktop application for system administration and maintenance tasks. Built with Python and PySide6, this tool provides an intuitive graphical interface for common system maintenance operations that typically require command-line access and administrator privileges.
 
-![System Maintenance Tools]
+![System Maintenance Tools](https://via.placeholder.com/800x500/2C3E50/ECF0F1?text=System+Maintenance+Tools)
 
 ## Features
 
@@ -72,7 +72,7 @@ The application features a clean, tabbed interface with dedicated sections for e
 
 1. **Download the latest release** from the releases page or clone this repository:
    \`\`\`bash
-   git clone https://github.com/krvcho/windows-tools
+   git clone https://github.com/yourusername/system-maintenance-tools.git
    cd system-maintenance-tools
    \`\`\`
 

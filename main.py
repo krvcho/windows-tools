@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
 from PySide6.QtCore import QThread, Signal, QTimer, Qt
 from PySide6.QtGui import QFont, QPalette, QColor
 
-from system_commands import SystemCommandRunner
+from system_commands import SystemCommandRunner, SilentCommandRunner
 from registry_manager import RegistryManager
 from admin_utils import AdminUtils
 from ui_styles import UIStyles
@@ -35,6 +35,7 @@ class SystemMaintenanceApp(QMainWindow):
         self.command_runners = {}
         self.network_tools = NetworkToolsManager()
         self.log_export_manager = LogExportManager()
+        self.silent_runner = SilentCommandRunner()
         
         # Check admin privileges
         self.check_admin_privileges()
@@ -836,10 +837,14 @@ class SystemMaintenanceApp(QMainWindow):
         
         self.network_output.append("\n=== Flushing DNS Cache ===")
         
-        self.command_runners['dns_flush'] = SystemCommandRunner(
-            'ipconfig', '/flushdns', self.network_output
-        )
-        self.command_runners['dns_flush'].start()
+        # Use silent runner for DNS flush to avoid cmd window
+        result = self.silent_runner.run_silent_command('ipconfig', '/flushdns')
+        
+        if result['success']:
+            self.network_output.append("DNS cache flushed successfully.")
+            self.network_output.append(result['stdout'])
+        else:
+            self.network_output.append(f"Error flushing DNS cache: {result['stderr']}")
 
     def reset_network(self):
         if not self.admin_utils.is_admin():
@@ -857,7 +862,7 @@ class SystemMaintenanceApp(QMainWindow):
         
         self.network_output.append("\n=== Resetting Network Configuration ===")
         
-        # Run multiple network reset commands
+        # Run multiple network reset commands using silent runner
         commands = [
             ('netsh', 'winsock reset'),
             ('netsh', 'int ip reset'),
@@ -868,9 +873,16 @@ class SystemMaintenanceApp(QMainWindow):
         
         for cmd, args in commands:
             self.network_output.append(f"Running: {cmd} {args}")
-            runner = SystemCommandRunner(cmd, args, self.network_output)
-            runner.start()
-            runner.wait()  # Wait for each command to complete
+            result = self.silent_runner.run_silent_command(cmd, args, timeout=60)
+            
+            if result['success']:
+                self.network_output.append("✓ Command completed successfully")
+                if result['stdout'].strip():
+                    self.network_output.append(result['stdout'])
+            else:
+                self.network_output.append(f"✗ Command failed: {result['stderr']}")
+        
+        self.network_output.append("\nNetwork reset completed. You may need to restart your computer.")
 
     def clear_network_output(self):
         self.network_output.clear()

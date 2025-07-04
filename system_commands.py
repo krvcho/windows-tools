@@ -26,7 +26,11 @@ class SystemCommandRunner(QThread):
             # Create the full command
             full_command = f"{self.command} {self.arguments}"
             
-            # Start the process with elevated privileges
+            # Start the process with elevated privileges and hidden window
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            startupinfo.wShowWindow = subprocess.SW_HIDE
+            
             self.process = subprocess.Popen(
                 full_command,
                 shell=True,
@@ -35,6 +39,7 @@ class SystemCommandRunner(QThread):
                 text=True,
                 bufsize=1,
                 universal_newlines=True,
+                startupinfo=startupinfo,
                 creationflags=subprocess.CREATE_NO_WINDOW
             )
             
@@ -116,7 +121,11 @@ class DismCommandRunner(QThread):
             # Create the full command
             full_command = f"{self.command} {self.arguments}"
             
-            # Start the process with elevated privileges
+            # Start the process with elevated privileges and hidden window
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            startupinfo.wShowWindow = subprocess.SW_HIDE
+            
             self.process = subprocess.Popen(
                 full_command,
                 shell=True,
@@ -125,6 +134,7 @@ class DismCommandRunner(QThread):
                 text=True,
                 bufsize=1,
                 universal_newlines=True,
+                startupinfo=startupinfo,
                 creationflags=subprocess.CREATE_NO_WINDOW
             )
             
@@ -221,19 +231,24 @@ class ElevatedCommandRunner:
             import sys
             
             if ctypes.windll.shell32.IsUserAnAdmin():
-                # Already running as admin, execute directly
+                # Already running as admin, execute directly with hidden window
+                startupinfo = subprocess.STARTUPINFO()
+                startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+                startupinfo.wShowWindow = subprocess.SW_HIDE
+                
                 result = subprocess.run(
                     f"{command} {arguments}",
                     shell=True,
                     capture_output=True,
                     text=True,
+                    startupinfo=startupinfo,
                     creationflags=subprocess.CREATE_NO_WINDOW
                 )
                 return result.returncode, result.stdout, result.stderr
             else:
-                # Request elevation
+                # Request elevation - this will show UAC prompt but no cmd window
                 ctypes.windll.shell32.ShellExecuteW(
-                    None, "runas", command, arguments, None, 1
+                    None, "runas", command, arguments, None, 0  # 0 = SW_HIDE
                 )
                 return 0, "Command executed with elevation", ""
                 
@@ -264,3 +279,93 @@ class ElevatedCommandRunner:
             return True
         except:
             return False
+
+class SilentCommandRunner:
+    """Command runner that executes commands completely silently"""
+    
+    @staticmethod
+    def run_silent_command(command, arguments, timeout=30):
+        """Run a command silently without any visible windows"""
+        try:
+            # Create startup info to hide window
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            startupinfo.wShowWindow = subprocess.SW_HIDE
+            
+            # Execute command
+            result = subprocess.run(
+                f"{command} {arguments}",
+                shell=True,
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+                startupinfo=startupinfo,
+                creationflags=subprocess.CREATE_NO_WINDOW
+            )
+            
+            return {
+                'success': result.returncode == 0,
+                'returncode': result.returncode,
+                'stdout': result.stdout,
+                'stderr': result.stderr
+            }
+            
+        except subprocess.TimeoutExpired:
+            return {
+                'success': False,
+                'returncode': -1,
+                'stdout': '',
+                'stderr': 'Command timed out'
+            }
+        except Exception as e:
+            return {
+                'success': False,
+                'returncode': -1,
+                'stdout': '',
+                'stderr': str(e)
+            }
+    
+    @staticmethod
+    def run_powershell_silent(script, timeout=30):
+        """Run a PowerShell script silently"""
+        try:
+            # Create startup info to hide window
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            startupinfo.wShowWindow = subprocess.SW_HIDE
+            
+            # Execute PowerShell command
+            result = subprocess.run([
+                'powershell.exe',
+                '-WindowStyle', 'Hidden',
+                '-ExecutionPolicy', 'Bypass',
+                '-Command', script
+            ], 
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            startupinfo=startupinfo,
+            creationflags=subprocess.CREATE_NO_WINDOW
+            )
+            
+            return {
+                'success': result.returncode == 0,
+                'returncode': result.returncode,
+                'stdout': result.stdout,
+                'stderr': result.stderr
+            }
+            
+        except subprocess.TimeoutExpired:
+            return {
+                'success': False,
+                'returncode': -1,
+                'stdout': '',
+                'stderr': 'PowerShell script timed out'
+            }
+        except Exception as e:
+            return {
+                'success': False,
+                'returncode': -1,
+                'stdout': '',
+                'stderr': str(e)
+            }
