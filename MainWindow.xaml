@@ -1,0 +1,158 @@
+<Window x:Class="SystemMaintenanceTools.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="System Maintenance Tools" Height="700" Width="900"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5">
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Header -->
+        <TextBlock Grid.Row="0" Text="System Maintenance Tools" 
+                   FontSize="24" FontWeight="Bold" 
+                   Foreground="#2C3E50" Margin="0,0,0,20"/>
+        
+        <!-- Main Content -->
+        <TabControl Grid.Row="1" Background="White" BorderThickness="0">
+            
+            <!-- System File Checker Tab -->
+            <TabItem Header="System File Checker" FontSize="14">
+                <Grid Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" Text="System File Checker (SFC)" 
+                               FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    
+                    <TextBlock Grid.Row="1" Text="Scans and repairs corrupted system files" 
+                               Foreground="#7F8C8D" Margin="0,0,0,20"/>
+                    
+                    <ScrollViewer Grid.Row="2" Background="#2C3E50" Margin="0,0,0,15">
+                        <TextBox x:Name="SfcOutputTextBox" 
+                                 Background="Transparent" 
+                                 Foreground="#ECF0F1"
+                                 FontFamily="Consolas"
+                                 FontSize="12"
+                                 IsReadOnly="True"
+                                 TextWrapping="Wrap"
+                                 VerticalScrollBarVisibility="Auto"
+                                 Padding="10"/>
+                    </ScrollViewer>
+                    
+                    <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="RunSfcButton" Content="Run SFC /scannow" 
+                                Click="RunSfcButton_Click"
+                                Background="#3498DB" Foreground="White"
+                                Padding="15,8" Margin="0,0,10,0"
+                                BorderThickness="0" FontWeight="SemiBold"/>
+                        <Button x:Name="StopSfcButton" Content="Stop" 
+                                Click="StopSfcButton_Click"
+                                Background="#E74C3C" Foreground="White"
+                                Padding="15,8" IsEnabled="False"
+                                BorderThickness="0" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            
+            <!-- Disk Check Tab -->
+            <TabItem Header="Disk Check" FontSize="14">
+                <Grid Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" Text="Disk Check (CHKDSK)" 
+                               FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    
+                    <TextBlock Grid.Row="1" Text="Checks and repairs disk errors" 
+                               Foreground="#7F8C8D" Margin="0,0,0,20"/>
+                    
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,15">
+                        <TextBlock Text="Select Drive:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <ComboBox x:Name="DriveComboBox" Width="100" Height="30"/>
+                    </StackPanel>
+                    
+                    <ScrollViewer Grid.Row="3" Background="#2C3E50" Margin="0,0,0,15">
+                        <TextBox x:Name="ChkdskOutputTextBox" 
+                                 Background="Transparent" 
+                                 Foreground="#ECF0F1"
+                                 FontFamily="Consolas"
+                                 FontSize="12"
+                                 IsReadOnly="True"
+                                 TextWrapping="Wrap"
+                                 VerticalScrollBarVisibility="Auto"
+                                 Padding="10"/>
+                    </ScrollViewer>
+                    
+                    <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="RunChkdskButton" Content="Run CHKDSK /f /r" 
+                                Click="RunChkdskButton_Click"
+                                Background="#27AE60" Foreground="White"
+                                Padding="15,8" Margin="0,0,10,0"
+                                BorderThickness="0" FontWeight="SemiBold"/>
+                        <Button x:Name="StopChkdskButton" Content="Stop" 
+                                Click="StopChkdskButton_Click"
+                                Background="#E74C3C" Foreground="White"
+                                Padding="15,8" IsEnabled="False"
+                                BorderThickness="0" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            
+            <!-- Registry Tweaks Tab -->
+            <TabItem Header="Registry Tweaks" FontSize="14">
+                <Grid Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" Text="Windows Update Registry Tweaks" 
+                               FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    
+                    <TextBlock Grid.Row="1" Text="Disable automatic Windows updates and related services" 
+                               Foreground="#7F8C8D" Margin="0,0,0,20"/>
+                    
+                    <ScrollViewer Grid.Row="2" Background="#2C3E50" Margin="0,0,0,15">
+                        <TextBox x:Name="RegistryOutputTextBox" 
+                                 Background="Transparent" 
+                                 Foreground="#ECF0F1"
+                                 FontFamily="Consolas"
+                                 FontSize="12"
+                                 IsReadOnly="True"
+                                 TextWrapping="Wrap"
+                                 VerticalScrollBarVisibility="Auto"
+                                 Padding="10"/>
+                    </ScrollViewer>
+                    
+                    <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="DisableUpdatesButton" Content="Disable Windows Updates" 
+                                Click="DisableUpdatesButton_Click"
+                                Background="#F39C12" Foreground="White"
+                                Padding="15,8" Margin="0,0,10,0"
+                                BorderThickness="0" FontWeight="SemiBold"/>
+                        <Button x:Name="EnableUpdatesButton" Content="Enable Windows Updates" 
+                                Click="EnableUpdatesButton_Click"
+                                Background="#16A085" Foreground="White"
+                                Padding="15,8"
+                                BorderThickness="0" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
