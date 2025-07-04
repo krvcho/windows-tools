@@ -70,7 +70,7 @@ The application features a clean, tabbed interface with dedicated sections for e
 
 1. **Download the latest release** from the releases page or clone this repository:
    \`\`\`bash
-   git clone https://github.com/yourusername/system-maintenance-tools.git
+   git clone https://github.com/krvcho/windows-tools
    cd system-maintenance-tools
    \`\`\`
 
